@@ -1,11 +1,43 @@
 {
-  "template_modid": {
-    "": "Template Mod",
-    "description": "This mod is the _Template Mod_, or someone *forgot* to exchange the description.",
+  "sosiac_elements": {
+    "": "Sosiac Elements",
+    "description": "This just in, weird rocks make me feel things. More at 11.",
     "atoms": {
-      "test_atom": {
-        "": "Test Atom",
-        "elemental": "Elemental Test Atom"
+      "cognin": {
+        "": "Cognin",
+        "elemental": "Elemental Cognin"
+      },
+      "scion": {
+        "": "Scion",
+        "elemental": "Elemental Scion"
+      },
+      "pseudon": {
+        "": "Pseudon",
+        "elemental": "Elemental Pseudon"
+      },
+      "aestha": {
+        "": "Aestha",
+        "elemental": "Elemental Aestha"
+      },
+      "synthro": {
+        "": "Synthro",
+        "elemental": "Elemental Synthro"
+      },
+      "algia": {
+        "": "Algia",
+        "elemental": "Elemental Algia"
+      },
+      "certas": {
+        "": "Certas",
+        "elemental": "Elemental Certas"
+      },
+      "servas": {
+        "": "Servas",
+        "elemental": "Elemental Servas"
+      },
+      "physos": {
+        "": "Test Physos",
+        "elemental": "Elemental Physos"
       }
     }
   }
