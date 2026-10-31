@@ -39,6 +39,21 @@
         "": "Test Physos",
         "elemental": "Elemental Physos"
       }
+    },
+    "parts": {
+      "antithesis": {
+        "": "Glyph of Antithesis",
+        "description": "Combines the left and right sides of two sosiac atoms, inverting them."
+      },
+      "partial_antithesis": {
+        "": "Partial Glyph of Antithesis",
+        "description": "Salvages the lost right side of a sosiac atom, combining it with a left side from elsewhere, inverting them both. Must be hooked onto a Glyph of Antithesis to work."
+      }
+    },
+    "permission_sections": "Sosiac Elements",
+    "permissions": {
+      "antithesis": "Glyphs of Antithesis",
+
     }
   }
 }

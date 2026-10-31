@@ -291,7 +291,6 @@ namespace Parts
 
                     PartSimState chainedPss = sim.simulationDict[chainedPart];
                     chainedPss.isProcessing = true;
-                    Logger.Log(pss.isProcessing);
                     chainedPss.processingAtoms = [SosiacComposition.ComposeAtomTypes(inputAtomA.atomType, inputAtomB.atomType)];
                 }
 

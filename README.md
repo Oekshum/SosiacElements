@@ -1,4 +1,2 @@
-﻿# Template mod
-The template mod for CE Opus Magnum modding.
-
-Still work in progress.
+﻿# Sosiac Elements
+rahhhhhh jsut ask me on discord ill do this laterrrrr

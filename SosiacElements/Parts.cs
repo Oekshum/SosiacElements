@@ -48,12 +48,11 @@ namespace SosiacElements
                 AntithesisGlyph.OutputHex,
             },
                 permissionCategory = PuzzlePermissions.None,
-                CustomPermissionCheck = perms => perms.Contains(SosiacElements.Instance.GetIdentifier("partial_antithesis"))
+                CustomPermissionCheck = perms => perms.Contains(SosiacElements.Instance.GetIdentifier("antithesis"))
             };
 
             SosiacElements.Instance.AddPartType(PartialAntithesis, "partial_antithesis", AntithesisGlyph.RenderPartial);
             QApi.AddPartTypeToPanel(PartialAntithesis, PartTypes.proliferationGlyph);
-            SosiacElements.Instance.AddPuzzlePermission("partial_antithesis");
             QApi.BindGlyphCycle(PartialAntithesis, new(PartCycleExecutionType.Normal, AntithesisGlyph.OnCyclePartial));
             SosiacElements.Instance.AddRecipe(new(), PartialAntithesis.Id, PartialAntithesis.Id);
         }
