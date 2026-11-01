@@ -1,5 +1,6 @@
 ﻿using Quintessential;
 using Quintessential.Components;
+using SosiacElements.Util;
 using System;
 
 namespace SosiacElements.Components
@@ -22,6 +23,8 @@ namespace SosiacElements.Components
                                                            AssetLoaderHelper.LoadTexture("textures/sosiac_elements/atoms/right_symbol_2"),
                                                            AssetLoaderHelper.LoadTexture("textures/sosiac_elements/atoms/right_symbol_3")];
 
+        private static ((int, int), AtomType)[] componentIndicesList = SosiacComposition.ComponentPairs;
+
         public void OnBind(Atom self, Molecule arg1) => this.self = self;
         public void OnReplace(AtomType newType) => self.RemoveComponent(Id);
         public void OnUnbind(Atom self, Molecule arg1) => this.self = null;
@@ -35,25 +38,11 @@ namespace SosiacElements.Components
 
         public static void Register()
         { // Called in LoadContent();
-            QApi.AddComponentToAtom("sosiac_elements:cognin",  atom => new SosiacSideComponent(0, 0));
-            QApi.AddComponentToAtom("sosiac_elements:scion",   atom => new SosiacSideComponent(0, 1));
-            QApi.AddComponentToAtom("sosiac_elements:pseudon", atom => new SosiacSideComponent(0, 2));
-            QApi.AddComponentToAtom("sosiac_elements:aestha",  atom => new SosiacSideComponent(1, 0));
-            QApi.AddComponentToAtom("sosiac_elements:synthro", atom => new SosiacSideComponent(1, 1));
-            QApi.AddComponentToAtom("sosiac_elements:algia",   atom => new SosiacSideComponent(1, 2));
-            QApi.AddComponentToAtom("sosiac_elements:certas",  atom => new SosiacSideComponent(2, 0));
-            QApi.AddComponentToAtom("sosiac_elements:servas",  atom => new SosiacSideComponent(2, 1));
-            QApi.AddComponentToAtom("sosiac_elements:physos",  atom => new SosiacSideComponent(2, 2));
-
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:cognin",  (atom, _) => new SosiacSideComponent(0, 0));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:scion",   (atom, _) => new SosiacSideComponent(0, 1));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:pseudon", (atom, _) => new SosiacSideComponent(0, 2));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:aestha",  (atom, _) => new SosiacSideComponent(1, 0));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:synthro", (atom, _) => new SosiacSideComponent(1, 1));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:algia",   (atom, _) => new SosiacSideComponent(1, 2));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:certas",  (atom, _) => new SosiacSideComponent(2, 0));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:servas",  (atom, _) => new SosiacSideComponent(2, 1));
-            QApi.AddComponentToAtomOnReplace("sosiac_elements:physos",  (atom, _) => new SosiacSideComponent(2, 2));
+            foreach (((int, int), AtomType) pair in componentIndicesList)
+            {
+                QApi.AddComponentToAtom(pair.Item2.Id, atom => new SosiacSideComponent(pair.Item1.Item1, pair.Item1.Item2));
+                QApi.AddComponentToAtomOnReplace(pair.Item2.Id, (atom, _) => new SosiacSideComponent(pair.Item1.Item1, pair.Item1.Item2));
+            }
         }
 
         void IAtomComponent.OnRender(Action doRender, ref AtomType type, ref Vector2 translation, ref float scaleMultiplier, ref float opacityMultiplier, ref float height, ref float shadowStrength, ref float shadowOffset, ref float shadowAngle, Texture shadow, Texture overlayEffect, bool isOutputRender, SolutionEditorBase solutionEditor)

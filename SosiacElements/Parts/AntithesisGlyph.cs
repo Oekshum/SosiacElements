@@ -1,4 +1,5 @@
 ﻿using Quintessential;
+using SosiacElements;
 using SosiacElements.Util;
 using System;
 using System.Collections.Generic;
@@ -123,6 +124,12 @@ namespace Parts
             {
                 Editor.RenderMolecule(RisingAtom, RisingOffset, new HexIndex(0, 0), 0f, 1f, time, 1f, false, null);
             }
+        }
+
+        private static void AddSmokeEffect(HexIndex position, SolutionEditorBase seb, Sim sim)
+        {
+            Vector2 centerVecLeft = HexGrid.standardGrid.ToPixelCoords(position + InputRightHex);
+            seb.consumptionEffects.Add(new GlyphEffect(sim.solutionEditor, (EffectTimescaleType)1, centerVecLeft, SmokeAnim, 30, Vector2.Zero, 0));
         }
 
         public static bool OnCycleTotal(Sim sim, Part part, PartSimState pss, GlyphRecipe recipe, bool first)
