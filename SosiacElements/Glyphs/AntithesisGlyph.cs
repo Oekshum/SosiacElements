@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Parts
+namespace Glyphs
 {
     internal class AntithesisGlyph
     {
@@ -128,8 +128,8 @@ namespace Parts
 
         private static void AddSmokeEffect(HexIndex position, SolutionEditorBase seb, Sim sim)
         {
-            Vector2 centerVecLeft = HexGrid.standardGrid.ToPixelCoords(position + InputRightHex);
-            seb.consumptionEffects.Add(new GlyphEffect(sim.solutionEditor, (EffectTimescaleType)1, centerVecLeft, SmokeAnim, 30, Vector2.Zero, 0));
+            Vector2 centerVec = HexGrid.standardGrid.ToPixelCoords(position + InputRightHex);
+            seb.consumptionEffects.Add(new GlyphEffect(seb, (EffectTimescaleType)1, centerVec, SmokeAnim, 30, Vector2.Zero, 0));
         }
 
         public static bool OnCycleTotal(Sim sim, Part part, PartSimState pss, GlyphRecipe recipe, bool first)
@@ -170,25 +170,24 @@ namespace Parts
                     }
                 }
 
-                Vector2 centerVecLeft = HexGrid.standardGrid.ToPixelCoords(part.InFrontBy(InputLeftHex) + InputRightHex);
-                seb.consumptionEffects.Add(new GlyphEffect(sim.solutionEditor, (EffectTimescaleType)1, centerVecLeft, SmokeAnim, 30, Vector2.Zero, 0));
+
+                AddSmokeEffect(part.InFrontBy(InputLeftHex), seb, sim);
 
                 foreach (Part chainedPart in chain)
                 {
 
                     if (!sim.FindAtom(chainedPart.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA))
-                    { // no atom over bowl, even thhough i already checked. howd that happen?
+                    { // no atom over bowl, even though i already checked. howd that happen?
                         Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
                     if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
-                    { // no atom over bowl, even thhough i already checked. howd that happen 2 electric boogaloo
+                    { // no atom over bowl, even though i already checked. howd that happen 2 electric boogaloo
                         Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
 
-                    Vector2 centerVecRight = HexGrid.standardGrid.ToPixelCoords(chainedPart.InFrontBy(InputRightHex) + InputRightHex);
-                    seb.consumptionEffects.Add(new GlyphEffect(sim.solutionEditor, (EffectTimescaleType)1, centerVecRight, SmokeAnim, 30, Vector2.Zero, 0));
+                    AddSmokeEffect(chainedPart.InFrontBy(InputRightHex), seb, sim);
 
                     PartSimState chainedPss = sim.simulationDict[chainedPart];
                     chainedPss.isProcessing = true;
@@ -196,7 +195,7 @@ namespace Parts
                 }
 
                 if (!sim.FindAtom(part.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomFirst))
-                { // no atom over bowl, even thhough i already checked. howd that happen?
+                { // no atom over bowl, even though i already checked. howd that happen?
                     return false;
                 }
                 inputAtomFirst.molecule.RemoveAtom(inputAtomFirst.pos);
@@ -205,7 +204,7 @@ namespace Parts
                 foreach (Part chainedPart in chain)
                 {
                     if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
-                    { // no atom over bowl, even thhough i already checked. howd that happen 2 electric boogaloo
+                    { // no atom over bowl, even though i already checked. howd that happen 2 electric boogaloo
                         Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
@@ -293,8 +292,7 @@ namespace Parts
                         return false;
                     }
 
-                    Vector2 centerVecRight = HexGrid.standardGrid.ToPixelCoords(chainedPart.InFrontBy(InputRightHex) + InputRightHex);
-                    seb.consumptionEffects.Add(new GlyphEffect(sim.solutionEditor, (EffectTimescaleType)1, centerVecRight, SmokeAnim, 30, Vector2.Zero, 0));
+                    AddSmokeEffect(chainedPart.InFrontBy(InputRightHex), seb, sim);
 
                     PartSimState chainedPss = sim.simulationDict[chainedPart];
                     chainedPss.isProcessing = true;

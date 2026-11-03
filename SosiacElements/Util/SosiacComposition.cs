@@ -38,5 +38,25 @@ namespace SosiacElements.Util
             }
             return pairToSosiacAtom[(pair1.Item2, pair2.Item1)];
         }
+
+        public static bool IsSosiac(AtomType type)
+        {
+            return sosiacAtomToPair.ContainsKey(type);
+        }
+
+        private static int mod(int x, int m)
+        {
+            return (x % m + m) % m;
+        }
+
+        public static (int, int) ShiftSosiac((int, int) inputPair, int x, int y)
+        {
+            return (mod(inputPair.Item1 + x, 3), mod(inputPair.Item2 + y, 3));
+        }
+
+        public static AtomType ShiftSosiac(AtomType inputType, int x, int y)
+        {
+            return pairToSosiacAtom[ShiftSosiac(sosiacAtomToPair[inputType], x, y)];
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Parts;
+﻿using Glyphs;
 using Quintessential;
 using static Quintessential.PartCycleDelegate;
 
@@ -6,7 +6,7 @@ namespace SosiacElements
 {
     internal class Parts
     {
-        public static PartType TotalAntithesis, PartialAntithesis;
+        public static PartType TotalAntithesis, PartialAntithesis, Transfusion;
 
         public static void LoadPartTypes()
         {
@@ -55,6 +55,31 @@ namespace SosiacElements
             QApi.AddPartTypeToPanel(PartialAntithesis, PartTypes.proliferationGlyph);
             QApi.BindGlyphCycle(PartialAntithesis, new(PartCycleExecutionType.Normal, AntithesisGlyph.OnCyclePartial));
             SosiacElements.Instance.AddRecipe(new(), PartialAntithesis.Id, PartialAntithesis.Id);
+
+            Transfusion = new()
+            {
+                cost = 35,
+                isFullHexCover = true,
+                glowTexture = AssetLoaderHelper.LoadTexture("textures/sosic_elements/select/straight_glow"),
+                strokeTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/select/straight_stroke"),
+                baseTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
+                hoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
+                glyphHexes = new HexIndex[]
+            {
+                TransfusionGlyph.InputHex,
+                TransfusionGlyph.BowlHex,
+            },
+                permissionCategory = PuzzlePermissions.None,
+                CustomPermissionCheck = perms => perms.Contains(SosiacElements.Instance.GetIdentifier("transfusion"))
+            };
+
+            SosiacElements.Instance.AddPartType(Transfusion, "transfusion", TransfusionGlyph.Render);
+            QApi.AddPartTypeToPanel(Transfusion, PartTypes.proliferationGlyph);
+            SosiacElements.Instance.AddPuzzlePermission("transfusion");
+            QApi.BindGlyphCycle(Transfusion, new(PartCycleExecutionType.Normal, TransfusionGlyph.OnCycle));
+            SosiacElements.Instance.AddRecipe(new(), Transfusion.Id, Transfusion.Id);
         }
+
+
     }
 }
