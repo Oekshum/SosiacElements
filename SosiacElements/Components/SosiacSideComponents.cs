@@ -48,8 +48,9 @@ namespace SosiacElements.Components
         void IAtomComponent.OnRender(Action doRender, ref AtomType type, ref Vector2 translation, ref float scaleMultiplier, ref float opacityMultiplier, ref float height, ref float shadowStrength, ref float shadowOffset, ref float shadowAngle, Texture shadow, Texture overlayEffect, bool isOutputRender, SolutionEditorBase solutionEditor)
         {
             doRender();
-            TextureRenderer.Render(leftTextures[first], translation - new Vector2(30f, 30f) + OffsetForSymbol(first, true));
-            TextureRenderer.Render(rightTextures[second], translation - new Vector2(30f, 30f) + OffsetForSymbol(second, false));
+            Color symbolColor = (isOutputRender) ? Color.Gray(127) : Color.White;
+            TextureRenderer.Render(leftTextures[first],   symbolColor, translation - new Vector2(30f, 30f) + OffsetForSymbol(first, true));
+            TextureRenderer.Render(rightTextures[second], symbolColor, translation - new Vector2(30f, 30f) + OffsetForSymbol(second, false));
             time++;
         }
 
