@@ -16,8 +16,8 @@ namespace SosiacElements
                 isFullHexCover = true,
                 glowTexture = AssetLoaderHelper.LoadTexture("textures/sosic_elements/select/straight_glow"),
                 strokeTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/select/straight_stroke"),
-                baseTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
-                hoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
+                iconTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
+                iconHoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
                 glyphHexes = new HexIndex[]
             {
                 AntithesisGlyph.InputLeftHex,
@@ -40,8 +40,8 @@ namespace SosiacElements
                 isFullHexCover = true,
                 glowTexture = AssetLoaderHelper.LoadTexture("textures/sosic_elements/select/straight_glow"),
                 strokeTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/select/straight_stroke"),
-                baseTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
-                hoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
+                iconTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
+                iconHoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/antithesis_icon"),
                 glyphHexes = new HexIndex[]
             {
                 AntithesisGlyph.InputRightHex,
@@ -62,8 +62,8 @@ namespace SosiacElements
                 isFullHexCover = true,
                 glowTexture = AssetLoaderHelper.LoadTexture("textures/sosic_elements/select/straight_glow"),
                 strokeTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/select/straight_stroke"),
-                baseTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
-                hoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
+                iconTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
+                iconHoverTexture = AssetLoaderHelper.LoadTexture("textures/sosiac_elements/parts/transfusion_icon"),
                 glyphHexes = new HexIndex[]
             {
                 TransfusionGlyph.InputHex,

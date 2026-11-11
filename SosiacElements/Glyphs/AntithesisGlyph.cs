@@ -35,7 +35,7 @@ namespace Glyphs
             renderer.RenderUpright(AntithesisBowlLeft, InputRightHex, Vector2.Zero);
             // if a partial antithesis is hooked onto this, add right side symbol to right bowl
             if (editor.GetSimulation() is Sim sim && sim.GetSolution().parts.Count(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                    && foundPart.InFrontBy(InputLeftHex) == part.InFrontBy(InputRightHex))) == 1)
+                    && foundPart.GlobalPosFromLocal(InputLeftHex) == part.GlobalPosFromLocal(InputRightHex))) == 1)
             {
                 renderer.RenderUpright(AntithesisBowlRight, InputRightHex, Vector2.Zero);
             }
@@ -87,7 +87,7 @@ namespace Glyphs
             renderer.RenderUpright(AntithesisBowlLeft, InputRightHex, Vector2.Zero);
             // if a partial antithesis is hooked onto this, add right side symbol to right bowl
             if (editor.GetSimulation() is Sim sim && sim.GetSolution().parts.Count(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                    && foundPart.InFrontBy(InputLeftHex) == part.InFrontBy(InputRightHex))) == 1)
+                    && foundPart.GlobalPosFromLocal(InputLeftHex) == part.GlobalPosFromLocal(InputRightHex))) == 1)
             {
                 renderer.RenderUpright(AntithesisBowlRight, InputRightHex, Vector2.Zero);
             }
@@ -141,26 +141,26 @@ namespace Glyphs
                 List<Part> chain = [part];
 
                 IEnumerable<Part> nextParts = sim.GetSolution().parts.Where(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                    && foundPart.InFrontBy(InputLeftHex) == chain.Last().InFrontBy(InputRightHex)));
+                    && foundPart.GlobalPosFromLocal(InputLeftHex) == chain.Last().GlobalPosFromLocal(InputRightHex)));
 
                 while (nextParts.Count() == 1)
                 {
                     chain.Add(nextParts.First());
                     nextParts = sim.GetSolution().parts.Where(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                        && foundPart.InFrontBy(InputLeftHex) == chain.Last().InFrontBy(InputRightHex)));
+                        && foundPart.GlobalPosFromLocal(InputLeftHex) == chain.Last().GlobalPosFromLocal(InputRightHex)));
                 }
 
                 foreach (Part chainedPart in chain)
                 {
-                    if (sim.FindAtom(chainedPart.InFrontBy(OutputHex)).HasValue())
+                    if (sim.FindAtom(chainedPart.GlobalPosFromLocal(OutputHex)).HasValue())
                     { //iris full
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA) || inputAtomA.inMultiAtomMolecule || inputAtomA.isHeldByArm)
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA) || inputAtomA.inMultiAtomMolecule || inputAtomA.isHeldByArm)
                     { // no atom over bowl, atom over hole is part of molecule (is bonded), or atom is held
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB) || inputAtomB.inMultiAtomMolecule || inputAtomB.isHeldByArm)
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB) || inputAtomB.inMultiAtomMolecule || inputAtomB.isHeldByArm)
                     { // no atom over bowl, atom over hole is part of molecule (is bonded), or atom is held
                         return false;
                     }
@@ -171,30 +171,30 @@ namespace Glyphs
                 }
 
 
-                AddSmokeEffect(part.InFrontBy(InputLeftHex), seb, sim);
+                AddSmokeEffect(part.GlobalPosFromLocal(InputLeftHex), seb, sim);
 
                 foreach (Part chainedPart in chain)
                 {
 
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA))
                     { // no atom over bowl, even though i already checked. howd that happen?
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
                     { // no atom over bowl, even though i already checked. howd that happen 2 electric boogaloo
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
 
-                    AddSmokeEffect(chainedPart.InFrontBy(InputRightHex), seb, sim);
+                    AddSmokeEffect(chainedPart.GlobalPosFromLocal(InputRightHex), seb, sim);
 
                     PartSimState chainedPss = sim.simulationDict[chainedPart];
                     chainedPss.isProcessing = true;
                     chainedPss.processingAtoms = [SosiacComposition.ComposeAtomTypes(inputAtomA.atomType, inputAtomB.atomType)];
                 }
 
-                if (!sim.FindAtom(part.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomFirst))
+                if (!sim.FindAtom(part.GlobalPosFromLocal(InputLeftHex)).GetOrDefault(out AtomReference inputAtomFirst))
                 { // no atom over bowl, even though i already checked. howd that happen?
                     return false;
                 }
@@ -203,9 +203,9 @@ namespace Glyphs
 
                 foreach (Part chainedPart in chain)
                 {
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
                     { // no atom over bowl, even though i already checked. howd that happen 2 electric boogaloo
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
 
@@ -238,7 +238,7 @@ namespace Glyphs
                 bool foundLoop = false;
 
                 IEnumerable<Part> nextParts = sim.GetSolution().parts.Where(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                    && foundPart.InFrontBy(InputLeftHex) == chain.Last().InFrontBy(InputRightHex)));
+                    && foundPart.GlobalPosFromLocal(InputLeftHex) == chain.Last().GlobalPosFromLocal(InputRightHex)));
 
                 while (nextParts.Count() == 1)
                 {
@@ -249,7 +249,7 @@ namespace Glyphs
                     }
                     chain.Add(nextParts.First());
                     nextParts = sim.GetSolution().parts.Where(foundPart => (foundPart.GetType() == SosiacElements.Parts.PartialAntithesis
-                        && foundPart.InFrontBy(InputLeftHex) == chain.Last().InFrontBy(InputRightHex)));
+                        && foundPart.GlobalPosFromLocal(InputLeftHex) == chain.Last().GlobalPosFromLocal(InputRightHex)));
                 }
 
                 if (!foundLoop)
@@ -259,15 +259,15 @@ namespace Glyphs
 
                 foreach (Part chainedPart in chain)
                 {
-                    if (sim.FindAtom(chainedPart.InFrontBy(OutputHex)).HasValue())
+                    if (sim.FindAtom(chainedPart.GlobalPosFromLocal(OutputHex)).HasValue())
                     { //iris full
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA) || inputAtomA.inMultiAtomMolecule || inputAtomA.isHeldByArm)
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA) || inputAtomA.inMultiAtomMolecule || inputAtomA.isHeldByArm)
                     { // no atom over bowl, atom over hole is part of molecule (is bonded), or atom is held
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB) || inputAtomB.inMultiAtomMolecule || inputAtomB.isHeldByArm)
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB) || inputAtomB.inMultiAtomMolecule || inputAtomB.isHeldByArm)
                     { // no atom over bowl, atom over hole is part of molecule (is bonded), or atom is held
                         return false;
                     }
@@ -281,18 +281,18 @@ namespace Glyphs
                 foreach (Part chainedPart in chain)
                 {
 
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputLeftHex)).GetOrDefault(out AtomReference inputAtomA))
                     { // no atom over bowl, even thhough i already checked. howd that happen?
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
                     { // no atom over bowl, even thhough i already checked. howd that happen 2 electric boogaloo
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
 
-                    AddSmokeEffect(chainedPart.InFrontBy(InputRightHex), seb, sim);
+                    AddSmokeEffect(chainedPart.GlobalPosFromLocal(InputRightHex), seb, sim);
 
                     PartSimState chainedPss = sim.simulationDict[chainedPart];
                     chainedPss.isProcessing = true;
@@ -301,9 +301,9 @@ namespace Glyphs
 
                 foreach (Part chainedPart in chain)
                 {
-                    if (!sim.FindAtom(chainedPart.InFrontBy(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
+                    if (!sim.FindAtom(chainedPart.GlobalPosFromLocal(InputRightHex)).GetOrDefault(out AtomReference inputAtomB))
                     { // no atom over bowl, even thhough i already checked. howd that happen 2 electric boogaloo
-                        Logger.Log("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
+                        SosiacElements.SosiacElements.Instance.Log.Error("[Sosiac Elements] How did you manage that? (the atom on an antithesis glyph disappeared half-way through the OnCycle!)");
                         return false;
                     }
 

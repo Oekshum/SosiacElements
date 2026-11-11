@@ -40,11 +40,11 @@ namespace Glyphs
             {
                 SolutionEditorBase seb = sim.solutionEditor;
 
-                if (!sim.FindAtom(part.InFrontBy(BowlHex)).GetOrDefault(out AtomReference bowlAtom))
+                if (!sim.FindAtom(part.GlobalPosFromLocal(BowlHex)).GetOrDefault(out AtomReference bowlAtom))
                 { //bowl empty
                     return false;
                 }
-                if (!sim.FindAtom(part.InFrontBy(InputHex)).GetOrDefault(out AtomReference inputAtom) || inputAtom.inMultiAtomMolecule || inputAtom.isHeldByArm)
+                if (!sim.FindAtom(part.GlobalPosFromLocal(InputHex)).GetOrDefault(out AtomReference inputAtom) || inputAtom.inMultiAtomMolecule || inputAtom.isHeldByArm)
                 { // no atom over bowl, atom over hole is part of molecule (is bonded), or atom is held
                     return false;
                 }
@@ -68,7 +68,7 @@ namespace Glyphs
                 }   
 
                 bowlAtom.molecule.ReplaceAtom(transfusedType, bowlAtom.pos);
-                Vector2 centerVecLeft = HexGrid.standardGrid.ToPixelCoords(part.InFrontBy(BowlHex));
+                Vector2 centerVecLeft = HexGrid.standardGrid.ToPixelCoords(part.GlobalPosFromLocal(BowlHex));
                 bowlAtom.atom.transmutationEffect = new TransmutationEffect(seb, TransmutationEffectRenderMode.AsEffect, bowlAtom.atomType, GlowAnim, 10f);
 
                 inputAtom.molecule.RemoveAtom(inputAtom.pos);

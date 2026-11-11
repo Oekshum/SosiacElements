@@ -33,7 +33,7 @@ namespace SosiacElements.Util
         {
             if (!sosiacAtomToPair.TryGetValue(atom1, out (int, int) pair1) || !sosiacAtomToPair.TryGetValue(atom2, out (int, int) pair2))
             {
-                Logger.Log("tried to compose " + atom1.name + " and " + atom2.name);
+                SosiacElements.Instance.Log.Error("tried to compose " + atom1.name + " and " + atom2.name);
                 throw new ArgumentException("Both atoms composed must be Sosiac");
             }
             return pairToSosiacAtom[(pair1.Item2, pair2.Item1)];
